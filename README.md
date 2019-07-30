@@ -1,4 +1,4 @@
-# Nomonichas
+# Boilerplate Nomonichas Apollo and Express
 ![travis build](https://img.shields.io/travis/gbili/bp-nomonichas-apollo-express.svg?style=flat-square)
 ![code coverage](https://img.shields.io/codecov/c/github/gbili/bp-nomonichas-apollo-express.svg)
 ![version](https://img.shields.io/npm/v/bp-nomonichas-apollo-express.svg)
