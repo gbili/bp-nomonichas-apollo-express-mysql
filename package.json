@@ -1,7 +1,7 @@
 {
-  "name": "nomonichas",
+  "name": "bp-nomonichas-apollo-express",
   "version": "0.0.0-development",
-  "description": "Base Project: Node Mocha Chai Travis Semantic-Release Nyc Codecov Ghooks",
+  "description": "Base Project: Node Mocha Chai Travis Semantic-Release Nyc Codecov Ghooks, Apollo and Express",
   "main": "build/index.js",
   "scripts": {
     "clean": "rm -fr ./build/*",
@@ -18,13 +18,13 @@
     "semantic-release": "semantic-release"
   },
   "config": {
-      "ghooks": {
-          "pre-commit": "npm run test && npm run coverage:generate && npm run coverage:check"
-      }
+    "ghooks": {
+      "pre-commit": "npm run test && npm run coverage:generate && npm run coverage:check"
+    }
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/gbili/nomonichas.git"
+    "url": "https://github.com/gbili/bp-nomonichas-apollo-express.git"
   },
   "keywords": [
     "nodejs",
@@ -36,9 +36,9 @@
   "author": "Guillermo Pages <mail@guillermo.at> (https://guillermo.at)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/gbili/nomonichas/issues"
+    "url": "https://github.com/gbili/bp-nomonichas-apollo-express/issues"
   },
-  "homepage": "https://github.com/gbili/nomonichas#readme",
+  "homepage": "https://github.com/gbili/bp-nomonichas-apollo-express#readme",
   "devDependencies": {
     "@babel/cli": "7.4.4",
     "@babel/core": "7.4.5",
@@ -48,12 +48,21 @@
     "chai": "4.2.0",
     "codecov": "^3.5.0",
     "ghooks": "^2.0.4",
+    "marked": "^0.6.3",
+    "marked-terminal": "^3.2.0",
     "mocha": "6.1.4",
     "nodemon": "1.19.1",
     "nyc": "^14.1.1",
-    "semantic-release": "^15.13.18"
+    "semantic-release": "^15.13.19"
   },
-  "dependencies": {},
+  "dependencies": {
+    "apollo-server": "^2.6.2",
+    "apollo-server-express": "^2.6.2",
+    "dotenv": "^8.0.0",
+    "express": "^4.17.1",
+    "graphql": "^14.4.2",
+    "graphql-import": "^0.7.1"
+  },
   "directories": {
     "test": "test"
   }
