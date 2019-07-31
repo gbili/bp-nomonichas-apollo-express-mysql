@@ -2,6 +2,7 @@ import 'dotenv/config';
 import express from 'express';
 import { ApolloServer } from 'apollo-server-express';
 import mysql from 'mysql';
+import cors from 'cors';
 
 import schema from './schema';
 import resolvers from './resolvers';
@@ -23,6 +24,7 @@ const server = new ApolloServer({
 });
 
 const app = express();
+app.use(cors());
 
 // use the express application as middleware in apollo server
 server.applyMiddleware({ app, path: graphqlPath });
