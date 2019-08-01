@@ -28,12 +28,27 @@ vim package.json
 
 Adapt the code in `src/` and `test/`
 
+Create a database and add the connection settings to the `.env` file like so:
+```
+DB_HOST=localhost
+DB_USER=myuser
+DB_PASSWORD=mypwd
+DB_NAME=dbname
+```
+This will let the database undump command create the appropriate table. Of course you should then adapt the models and `schema.sql` table definitions to your own domain.
+
 Then initialize and build
 ```
 npm init
 npm install
 npm run build
 ```
+
+Once installed, you can run:
+```
+npm run db:undump
+```
+Which should create the required tables defined in `schema.sql`.
 
 Finally make commit and push changes
 ```
