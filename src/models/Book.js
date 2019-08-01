@@ -1,13 +1,4 @@
-const books = [
-  {
-    title: 'Meditations',
-    author: 'Marcus Aurelius'
-  },
-  {
-    title: 'How to win friends and influence people',
-    author: 'Dale Carnegie'
-  },
-];
+import MysqlReq from '../data/connection';
 
 class Book {
   constructor({title, author}) {
@@ -15,8 +6,18 @@ class Book {
     this.author = author;
   }
 
-  static all() {
-    return books;
+  async save() {
+    let res = await MysqlReq.query({
+      sql: 'INSERT INTO Book (title, author) VALUES (?, ?)',
+      values: [this.title, this.author]
+    });
+    return res.insertId;
+  }
+
+  static async all() {
+    return await MysqlReq.query({
+      sql: 'SELECT * FROM Book;'
+    });
   }
 }
 

@@ -7,7 +7,12 @@ extend type Query {
   books: [Book]!
 }
 
+input AddBookInput {
+  title: String!
+  author: String!
+}
+
 extend type Mutation {
-  addBook(title: String!, author:String!): Book!
+  addBook(input: AddBookInput!): Book!
 }
 
