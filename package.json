@@ -15,6 +15,7 @@
     "test": "mocha --require @babel/register --recursive",
     "develop": "nodemon --exec babel-node ./src/index.js",
     "serve": "NODE_ENV=production node ./build/index.js",
+    "db:undump": "babel-node ./src/data/schema.js",
     "semantic-release": "semantic-release"
   },
   "config": {
