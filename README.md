@@ -36,6 +36,24 @@ DB_PASSWORD=mypwd
 DB_NAME=dbname
 ```
 This will let the database undump command create the appropriate table. Of course you should then adapt the models and `schema.sql` table definitions to your own domain.
+For your tests you should create a separate database and pass the credentials through the .env file as well:
+```
+TEST_DB_HOST=localhost
+TEST_DB_USER=test_user
+TEST_DB_PASSWORD=test_password
+TEST_DB_NAME=dbname_test
+```
+To create the database and users in MySQL run:
+```
+$ mysql -u root -p
+$ ***** # enter your password
+
+$ mysql> create database dbname_test;
+$ mysql> create user 'test_user'@'localhost' identified by 'test_password';
+$ mysql> ALTER USER 'test_user'@'localhost' IDENTIFIED WITH mysql_native_password BY 'test_password'
+$ mysql> grant all on dbname_test.* to 'user_test'@'localhost';
+$ mysql> flush privileges;
+```
 
 Then initialize and build
 ```
