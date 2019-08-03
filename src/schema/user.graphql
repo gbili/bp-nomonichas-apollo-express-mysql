@@ -1,0 +1,33 @@
+type User {
+  id: ID!
+  username: String!
+  email: String!
+  books: [Book]!
+}
+
+extend type Query {
+  getLoggedInUser: User
+}
+
+input RegisterUserInput {
+  username: String!
+  email: String!
+  plainPassword: String!
+}
+
+input LoginUserWithEmailInput {
+  email: String!
+  password: String!
+}
+
+input LoginUserWithUsernameInput {
+  username: String!
+  password: String!
+}
+
+extend type Mutation {
+  registerUser(input: RegisterUserInput!): User!
+  loginUserWithEmail(input: LoginUserWithEmailInput!): User
+  loginUserWithUsername(input: LoginUserWithUsernameInput!): User
+}
+
