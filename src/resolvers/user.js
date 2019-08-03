@@ -7,15 +7,13 @@ const resolver = {
 
   Mutation: {
     registerUser: async (_, { input }, { User }) => {
-      console.log('registering user resolver');
-      let user;
       try {
-      user = await User.register(input);
-      console.log(user);
+        const user = await User.register(input);
+        return user;
       } catch (err) {
+        console.log('error', err);
         throw err;
       }
-      return user;
     },
   },
 };

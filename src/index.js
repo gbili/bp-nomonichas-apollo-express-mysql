@@ -1,11 +1,16 @@
 import 'dotenv/config';
 import express from 'express';
 import { ApolloServer } from 'apollo-server-express';
-import Book from 'src/models/Book';
 import cors from 'cors';
 
+import { Book, User } from './models';
+
+import MysqlReq from './utils/MysqlReq';
 import schema from './schema';
 import resolvers from './resolvers';
+
+MysqlReq.configureConnection({ multipleStatements: false });
+MysqlReq.connect();
 
 const dev = process.env.NODE_ENV === 'development';
 const port = process.env.PORT || 3030;
@@ -14,7 +19,7 @@ const graphqlPath = process.env.GRAPHQL_PATH || '/graphql';
 const server = new ApolloServer({
   typeDefs: schema,
   resolvers,
-  context: { Book }
+  context: { Book, User }
 });
 
 const app = express();

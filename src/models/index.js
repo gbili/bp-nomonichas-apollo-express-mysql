@@ -1,5 +1,4 @@
 import Book from './Book';
+import User from './User';
 
-export { Book, };
-
-export default Book;
+export { Book, User };

@@ -63,16 +63,12 @@ class User {
       sql,
       values: params
     });
-
-    console.log('user res');
-    console.log(res);
-
-    return (res && new User(res)) || null;
+    return (res && res.length && new User(res[0])) || null;
   }
 
   static async all() {
     return await MysqlReq.query({
-      sql: 'SELECT * FROM User;'
+      sql: 'SELECT * FROM User'
     });
   }
 }
