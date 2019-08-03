@@ -12,10 +12,10 @@
     "coverage:report": "nyc report --reporter=text-lcov > coverage.lcov",
     "coverage:report:upload": "CODECOV_TOKEN=\"$(grep \"CODECOV_TOKEN=\" .env | cut -d'=' -f2)\" codecov",
     "coverage": "npm run coverage:generate && npm run coverage:check && npm run coverage:report && npm run coverage:report:upload",
-    "test": "mocha --require @babel/register --recursive",
+    "test": "NODE_ENV=test mocha --require @babel/register --recursive",
     "develop": "nodemon --exec babel-node ./src/index.js",
     "serve": "NODE_ENV=production node ./build/index.js",
-    "db:undump": "babel-node ./src/data/schema.js",
+    "db:undump": "NODE_ENV=npmscript babel-node ./src/data/schema.js",
     "semantic-release": "semantic-release"
   },
   "config": {
