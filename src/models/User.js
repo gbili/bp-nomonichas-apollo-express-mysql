@@ -1,4 +1,4 @@
-import MysqlReq from '../utils/MysqlReq';
+import { MysqlReq } from 'mysql-oh-wait';
 import argon2 from 'argon2';
 
 const saltRounds = 10;

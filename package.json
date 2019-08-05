@@ -65,7 +65,8 @@
     "express": "^4.17.1",
     "graphql": "^14.4.2",
     "graphql-import": "^0.7.1",
-    "mysql": "^2.17.1"
+    "mysql": "^2.17.1",
+    "mysql-oh-wait": "^0.1.5"
   },
   "directories": {
     "test": "test"

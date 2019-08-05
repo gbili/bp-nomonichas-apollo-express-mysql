@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import MysqlReq from '../src/utils/MysqlReq';
+import { MysqlReq } from 'mysql-oh-wait';
 
 let poststrapped = false;
 describe('Global teardown', function() {

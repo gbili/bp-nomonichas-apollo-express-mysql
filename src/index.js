@@ -5,11 +5,11 @@ import cors from 'cors';
 
 import { Book, User } from './models';
 
-import MysqlReq from './utils/MysqlReq';
+import { MysqlReq } from 'mysql-oh-wait';
 import schema from './schema';
 import resolvers from './resolvers';
 
-MysqlReq.configureConnection({ multipleStatements: false });
+MysqlReq.setConnectionConfig({ multipleStatements: false });
 MysqlReq.connect();
 
 const dev = process.env.NODE_ENV === 'development';

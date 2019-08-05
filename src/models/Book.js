@@ -1,4 +1,4 @@
-import MysqlReq from '../utils/MysqlReq';
+import { MysqlReq } from 'mysql-oh-wait';
 
 class Book {
   constructor({ID, title, author}) {
