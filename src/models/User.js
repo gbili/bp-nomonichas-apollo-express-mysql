@@ -1,5 +1,5 @@
 import MysqlReq from '../utils/MysqlReq';
-import bcrypt from 'bcrypt';
+import argon2 from 'argon2';
 
 const saltRounds = 10;
 
@@ -25,7 +25,7 @@ class UserRecord {
    * @return User ||false
    */
   static async register({ username, email, plainPassword }) {
-    const cryptedPassword = await bcrypt.hash(plainPassword, saltRounds);
+    const cryptedPassword = await argon2.hash(plainPassword, saltRounds);
     const res = await MysqlReq.query({
       sql: 'INSERT INTO User (username, email, cryptedPassword) VALUES (?, ?, ?)',
       values: [username, email, cryptedPassword],
@@ -55,7 +55,7 @@ class UserRecord {
 
     if (userRecords.length) {
       const userRecord = userRecords[0];
-      const passwordsMatch = await bcrypt.compare(plainPassword, userRecord.cryptedPassword);
+      const passwordsMatch = await argon2.compare(plainPassword, userRecord.cryptedPassword);
       return userRecord.userInstance;
     }
     return null;
