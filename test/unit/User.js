@@ -19,9 +19,9 @@ describe('User', function() {
       const user = await User.register({ username: 'AlphieRon', email: 'al@gmail.com', plainPassword: 'password'});
       expect(user.username).to.be.a('string');
     });
-    it('it should return a user with cryptedPassword', async function() {
+    it('it should return a user without cryptedPassword', async function() {
       const user = await User.register({ username: 'AllieMac', email: 'allie@gmail.com', plainPassword: 'password'});
-      expect(user.cryptedPassword).to.be.a('string');
+      expect(typeof user.cryptedPassword).to.be.equal('undefined');
     });
   });
 });
