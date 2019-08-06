@@ -23,25 +23,21 @@ class UserRecord {
     return this.userInstance.email;
   }
 
-  /**
-   * @return User ||false
-   */
   static async register({ username, email, plainPassword }) {
     const cryptedPassword = await argon2.hash(plainPassword, saltRounds);
     const res = await MysqlReq.query({
       sql: 'INSERT INTO User (username, email, cryptedPassword) VALUES (?, ?, ?)',
       values: [username, email, cryptedPassword],
     });
-    if (!res) {
-      return false; // user already exists, should login
+
+    let user = null;
+    if (res) {
+      user = (new UserRecord({ID: res.insertId, username, email, cryptedPassword })).userInstance;
     }
-    const userRecord = new UserRecord({ID: res.insertId, username, email, cryptedPassword });
-    return userRecord.userInstance;
+
+    return user || null;
   }
 
-  /**
-   * @return User || null
-   */
   static async authenticate({ username, email, plainPassword }) {
     if (!plainPassword) {
       throw new Error('must provide plainPassword');
@@ -62,57 +58,57 @@ class UserRecord {
       passwordsMatch = await argon2.verify(userRecord.cryptedPassword, plainPassword);
     }
 
-    return (passwordsMatch && userRecord.userInstance) || null;
+    const user = (passwordsMatch && userRecord.userInstance) || null;
+
+    return user || null;
   }
 
-  /**
-   * @return [ User ] || []
-   */
   static async all() {
-    return await MysqlReq.query({
+    const userList = await MysqlReq.query({
       sql: 'SELECT * FROM User',
       after: res => res.map(row => (new UserRecord(row)).userInstance)
     });
+
+    return userList;
   }
 
-  /**
-   * @return [ UserRecord ] || []
-   */
   static async _getUserRecordsByEmail(params) {
     const { email } = params;
     if (!email) {
       throw new Error('must provide email');
     }
-    return await UserRecord._getUserRecordsBy(params);
+
+    const userRecordList =  await UserRecord._getUserRecordsBy(params);
+
+    return userRecordList;
   }
 
-  /**
-   * @return [ UserRecord ] || []
-   */
   static async _getUserRecordsByUsername(params) {
     const { username } = params
     if (!username) {
       throw new Error('must provide username');
     }
-    return await UserRecord._getUserRecordsBy(params);
+
+    const userRecordList = await UserRecord._getUserRecordsBy(params);
+
+    return userRecordList;
   }
 
-  /**
-   * @return [ UserRecord ] || []
-   */
   static async _getUserRecordsBy(params) {
     let sql = 'SELECT ID, username, email, cryptedPassword FROM User WHERE ?'
-    return await MysqlReq.query({
+
+    const userRecordList = await MysqlReq.query({
       sql,
       values: params,
       after: res => res.map(row => new UserRecord(row))
     });
+
+    return userRecordList;
   }
 }
 
 class User {
   constructor({ID, username, email }) {
-    // a Registered User without the password
     this.ID = ID;
     this.username = username;
     this.email = email;

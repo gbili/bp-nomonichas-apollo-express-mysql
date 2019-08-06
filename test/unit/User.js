@@ -25,13 +25,13 @@ describe('User', function() {
     });
   });
   describe(`User.register(exising-user)`, function() {
-    it('it should return false if username already exists', async function() {
+    it('it should return null if username already exists', async function() {
       const user = await User.register({ username: 'JohnDoe', email: 'unknown@gmail.com', plainPassword: 'password'});
-      expect(user).to.be.equal(false);
+      expect(user).to.be.equal(null);
     });
-    it('it should return false if email already exists', async function() {
+    it('it should return null if email already exists', async function() {
       const user = await User.register({ username: 'Unknown', email: 'john@gmail.com', plainPassword: 'password'});
-      expect(user).to.be.equal(false);
+      expect(user).to.be.equal(null);
     });
   });
 
