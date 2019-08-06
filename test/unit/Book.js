@@ -19,5 +19,12 @@ describe('Book', function () {
     });
   });
 
+  describe(`Book.create(existing-book)`, async function() {
+    it('should return an instance of Book', async function() {
+      const book = await Book.create({title:'Meditations', author:'Marcus Aurelius'});
+      expect(book).to.be.an.instanceof(Book);
+    });
+  });
+
 });
 
