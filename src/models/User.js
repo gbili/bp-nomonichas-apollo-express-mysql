@@ -1,3 +1,5 @@
+import 'dotenv/config';
+import logger from 'saylo';
 import { MysqlReq } from 'mysql-oh-wait';
 import argon2 from 'argon2';
 
@@ -46,27 +48,29 @@ class UserRecord {
     }
     let userRecords = null;
     if (username) {
-      userRecords = UserRecord._getUserByUsername({ username });
+      userRecords = await UserRecord._getUserRecordsByUsername({ username });
     } else if (email) {
-      userRecords = UserRecord._getUserByEmail({ email });
+      userRecords = await UserRecord._getUserRecordsByEmail({ email });
     } else {
       throw new Error('must provide username or email');
     }
 
+    let passwordsMatch = false;
+    let userRecord = null;
     if (userRecords.length) {
-      const userRecord = userRecords[0];
-      const passwordsMatch = await argon2.compare(plainPassword, userRecord.cryptedPassword);
-      return userRecord.userInstance;
+      userRecord = userRecords[0];
+      passwordsMatch = await argon2.verify(userRecord.cryptedPassword, plainPassword);
     }
-    return null;
+
+    return (passwordsMatch && userRecord.userInstance) || null;
   }
 
   /**
    * @return [ User ] || []
    */
   static async all() {
-    const res = await MysqlReq.query({
-      sql: 'SELECT * FROM UserRecord',
+    return await MysqlReq.query({
+      sql: 'SELECT * FROM User',
       after: res => res.map(row => (new UserRecord(row)).userInstance)
     });
   }
@@ -74,30 +78,30 @@ class UserRecord {
   /**
    * @return [ UserRecord ] || []
    */
-  static async _getUserRecordByEmail(params) {
+  static async _getUserRecordsByEmail(params) {
     const { email } = params;
     if (!email) {
       throw new Error('must provide email');
     }
-    return await _getUserRecordBy(params);
+    return await UserRecord._getUserRecordsBy(params);
   }
 
   /**
    * @return [ UserRecord ] || []
    */
-  static async _getUserRecordByUsername(params) {
+  static async _getUserRecordsByUsername(params) {
     const { username } = params
     if (!username) {
       throw new Error('must provide username');
     }
-    return await _getUserRecordBy(params);
+    return await UserRecord._getUserRecordsBy(params);
   }
 
   /**
    * @return [ UserRecord ] || []
    */
-  static async _getUserRecordBy(params) {
-    let sql = 'SELECT ID, username, email, cryptedPassword FROM UserRecord.WHERE ?'
+  static async _getUserRecordsBy(params) {
+    let sql = 'SELECT ID, username, email, cryptedPassword FROM User WHERE ?'
     return await MysqlReq.query({
       sql,
       values: params,
@@ -127,4 +131,5 @@ class User {
   }
 }
 
+export { User, UserRecord };
 export default User;
