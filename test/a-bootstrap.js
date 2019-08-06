@@ -1,13 +1,11 @@
 import 'dotenv/config';
 import schemaFilePath from '../src/data/schema';
 import { MysqlDump } from 'mysql-oh-wait';
+import chai from 'chai';
+import chaiAsPromised from 'chai-as-promised';
 import { expect } from 'chai';
 
-let bootstrapped = false;
-describe('Global Bootstrapping', function() {
-
-  before(async () => {
-    bootstrapped = true;
+async function loadSchemaIntoDatabase() {
     const connectionConfig = {
       envVarNames : {
         host: 'TEST_DB_HOST',
@@ -21,6 +19,16 @@ describe('Global Bootstrapping', function() {
     } catch (err) {
       console.log('Bootstrap Error:', err);
     }
+}
+let bootstrapped = false;
+describe('Global Bootstrapping', function() {
+
+  before(async () => {
+    bootstrapped = true;
+
+    chai.use(chaiAsPromised);
+
+    await loadSchemaIntoDatabase();
   });
 
   it('bootstraps properly', function () {
