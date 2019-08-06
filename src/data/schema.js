@@ -1,7 +1,7 @@
 import 'dotenv/config';
 import { readFileSync } from 'fs';
 import { MysqlDump } from 'mysql-oh-wait';
-import logger from '../utils/logger';
+import logger from 'saylo';
 
 logger.log('shema.js');
 

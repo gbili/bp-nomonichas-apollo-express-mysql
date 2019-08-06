@@ -66,7 +66,8 @@
     "graphql": "^14.4.2",
     "graphql-import": "^0.7.1",
     "mysql": "^2.17.1",
-    "mysql-oh-wait": "^0.1.5"
+    "mysql-oh-wait": "^0.1.5",
+    "saylo": "^0.1.3"
   },
   "directories": {
     "test": "test"
