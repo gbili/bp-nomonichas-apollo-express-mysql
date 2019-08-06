@@ -1,11 +1,7 @@
 # Boilerplate Nomonichas Apollo, Express and MySQL
-![travis build](https://img.shields.io/travis/gbili/bp-nomonichas-apollo-express.svg?style=flat-square)
 ![code coverage](https://img.shields.io/codecov/c/github/gbili/bp-nomonichas-apollo-express.svg)
-![version](https://img.shields.io/npm/v/bp-nomonichas-apollo-express.svg)
-![downloads](https://img.shields.io/npm/dm/bp-nomonichas-apollo-express.svg)
-![license](https://img.shields.io/npm/l/bp-nomonichas-apollo-express.svg)
 
-> A working base setup in July 2019 using Nodejs, Mocha, Nyc, Istanbul, Chai, Semantic-Release, Travis-ci, Codecov.io, Apollo and Express
+> A working base setup in August 2019 using Nodejs, Mocha, Nyc, Istanbul, Chai, Semantic-Release, Travis-ci, Codecov.io, Apollo, Express and Mysql
 
 > **Note**: About Travis and Codecov.io, if you are developing a private project, it may make sense to switch to other services like CircleCi and something to replace codecov.io if you are on a tight budget.
 
