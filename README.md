@@ -1,5 +1,5 @@
 # Boilerplate Nomonichas Apollo, Express and MySQL
-![code coverage](https://img.shields.io/codecov/c/github/gbili/bp-nomonichas-apollo-express.svg)
+![code coverage](https://img.shields.io/codecov/c/github/gbili/bp-nomonichas-apollo-express-mysql.svg)
 
 > A working base setup in August 2019 using Nodejs, Mocha, Nyc, Istanbul, Chai, Semantic-Release, Travis-ci, Codecov.io, Apollo, Express and Mysql
 
@@ -9,7 +9,7 @@
 Create a repo on github.com / bitbucket.com and use that name in place of `your-project-name`.
 Clone this repo into your computer
 ```
-$ git clone git@github.com:gbili/bp-nomonichas-apollo-express your-project-name
+$ git clone git@github.com:gbili/bp-nomonichas-apollo-express-mysql your-project-name
 $ git remote remove origin
 $ git remote add origin git@github.com:your-name/your-project-name
 ```
@@ -17,7 +17,7 @@ $ git remote add origin git@github.com:your-name/your-project-name
 Then change the name.
 ```
 vim package.json
-:.,$s/bp-nomonichas-apollo-express/your-project-name/g <enter>
+:.,$s/bp-nomonichas-apollo-express-mysql/your-project-name/g <enter>
 :.,$s/gbili/your-name/g <enter>
 :wq
 ```
