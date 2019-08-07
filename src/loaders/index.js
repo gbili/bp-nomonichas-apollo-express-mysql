@@ -17,10 +17,13 @@ import appConfig from '../config/app';
 import schema from '../schema';
 import resolvers from '../resolvers';
 
-DiContainer.inject({ logger });
-DiContainer.set('appConfig', appConfig);
-
 const injectionDict = {
+  'logger': {
+    instance: logger,
+  },
+  'appConfig': {
+    instance: appConfig
+  },
   'MysqlReq': {
     injectable: MysqlReq,
     deps: { logger, adapter: mysql, env: process.env, connectionConfig: { multipleStatements: false } },
@@ -51,13 +54,15 @@ const injectionDict = {
     },
     after: async ({ me, serviceLocator }) => {
       const app = (await serviceLocator.get('App')).getInstance();
-      const path = serviceLocator.get('appConfig').path;
+      const path = (await serviceLocator.get('appConfig')).path;
       // use the express application as middleware in apollo server
+      logger.log('Going to applyMiddleware');
       me.getInstance().applyMiddleware({ app , path });
     },
   },
 };
 
+DiContainer.inject({ logger });
 DiContainer.cleanLoad(injectionDict);
 
 export default DiContainer;
