@@ -27,7 +27,7 @@ class DiContainer {
       return;
     }
     if (!_loadDict.hasOwnProperty(refName)) {
-      throw new Error('Attempting to load inexistent ref', refName);
+      throw new Error('DiContainer.load() attempting to load inexistent ref', refName);
     }
     const el = _loadDict[refName];
     let me = null;
@@ -101,6 +101,7 @@ class DiContainer {
   }
 
   static has(refName) {
+    _logger.log('DiContainer.has(', refName, ')', Object.keys(_locatorRefDict));
     return _locatorRefDict.hasOwnProperty(refName);
   }
 }
