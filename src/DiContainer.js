@@ -12,7 +12,11 @@ class DiContainer {
     _loadDict = { ..._loadDict, ...injectionDict };
     for (let refName in _loadDict) {
       _logger.log('loading :', refName);
-      await DiContainer.load(refName);
+      try {
+        await DiContainer.load(refName);
+      } catch (err) {
+        _logger.log(`DiContainer:cleanLoad(${refName}):load error occured in .load()`, err);
+      }
     }
   }
 
@@ -36,7 +40,11 @@ class DiContainer {
     if (el.hasOwnProperty('locateDeps')) {
       for (let key in el.locateDeps) {
         const depName = el.locateDeps[key];
-        el.locateDeps[key] = await DiContainer.get(depName);
+        try {
+          el.locateDeps[key] = await DiContainer.get(depName);
+        } catch (err) {
+          _logger.log(`DiContainer:load(${depName}):locateDeps error occured in .get()`, err);
+        }
       }
       locateDeps = el.locateDeps;
     }
@@ -46,7 +54,11 @@ class DiContainer {
     };
 
     if (el.hasOwnProperty('injectable')) {
-      await el.injectable.inject(deps)
+      try {
+        await el.injectable.inject(deps)
+      } catch (err) {
+        _logger.log(`DiContainer:load(${refName}):inject error occured in .inject()`, err);
+      }
       me = el.injectable;
     }
     if (el.hasOwnProperty('constructible')) {
@@ -57,7 +69,11 @@ class DiContainer {
       me = el.instance;
     }
     if (el.hasOwnProperty('after')) {
-      await el.after({ me, serviceLocator: DiContainer, el });
+      try {
+        await el.after({ me, serviceLocator: DiContainer, el });
+      } catch (err) {
+        _logger.log(`DiContainer:load(${refName}):after error occured in .after()`, err);
+      }
     }
     DiContainer.set(refName, me);
   }
@@ -67,7 +83,11 @@ class DiContainer {
       if (!_loadDict.hasOwnProperty(refName)) {
         throw new Error(`Trying to access inexistent ref: ${refName} available refs are: ${Object.keys(_locatorRefDict).join('\n')}`);
       }
-      await DiContainer.load(refName);
+      try {
+        await DiContainer.load(refName);
+      } catch (err) {
+        _logger.log(`DiContainer:get(${refName}):load error occured in .load()`, err);
+      }
     }
     return _locatorRefDict[refName];
   }
