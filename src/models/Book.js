@@ -1,7 +1,8 @@
-import { MysqlReq } from 'mysql-oh-wait';
+import RequestorCapability from './RequestorCapability';
+class Book extends RequestorCapability {
 
-class Book {
   constructor({ID, title, author}) {
+    super();
     this.ID = ID;
     this.title = title;
     this.author = author;
@@ -12,7 +13,7 @@ class Book {
     if (book) {
       return book;
     }
-    let res = await MysqlReq.query({
+    let res = await Book.getRequestor().query({
       sql: 'INSERT INTO Book (title, author) VALUES (?, ?)',
       values: [title, author]
     });
@@ -20,7 +21,7 @@ class Book {
   }
 
   static async getBookByTitleAuthor({ title, author }) {
-    let res = await MysqlReq.query({
+    let res = await Book.getRequestor().query({
       sql: 'SELECT * FROM Book WHERE title = ? AND author = ?',
       values: [ title, author ],
     });
@@ -28,10 +29,11 @@ class Book {
   }
 
   static async all() {
-    return await MysqlReq.query({
+    return await Book.getRequestor().query({
       sql: 'SELECT ID, title, author FROM Book'
     });
   }
+
 }
 
 export default Book;

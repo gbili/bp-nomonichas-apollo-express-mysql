@@ -1,12 +1,11 @@
-import 'dotenv/config';
-import logger from 'saylo';
-import { MysqlReq } from 'mysql-oh-wait';
-import argon2 from 'argon2';
+import RequestorCapability from './RequestorCapability';
 
 const saltRounds = 10;
+let _hasher = null;
 
-class UserRecord {
+class UserRecord extends RequestorCapability {
   constructor({ ID, username, email, cryptedPassword }) {
+    super();
     this.userInstance = new User({ ID, username, email });
     this.cryptedPassword = cryptedPassword;
   }
@@ -23,9 +22,25 @@ class UserRecord {
     return this.userInstance.email;
   }
 
+  static inject({requestor, hasher}) {
+    RequestorCapability.inject({requestor});
+    hasher && UserRecord.setHasher(hasher);
+  }
+
+  static setHasher(hasher) {
+    _hasher = hasher;
+  }
+
+  static getHasher() {
+    if (!_hasher) {
+      throw new Error('Must set hasher first');
+    }
+    return _hasher;
+  }
+
   static async register({ username, email, plainPassword }) {
-    const cryptedPassword = await argon2.hash(plainPassword, saltRounds);
-    const res = await MysqlReq.query({
+    const cryptedPassword = await UserRecord.getHasher().hash(plainPassword, saltRounds);
+    const res = await UserRecord.getRequestor().query({
       sql: 'INSERT INTO User (username, email, cryptedPassword) VALUES (?, ?, ?)',
       values: [username, email, cryptedPassword],
     });
@@ -55,7 +70,7 @@ class UserRecord {
     let userRecord = null;
     if (userRecords.length) {
       userRecord = userRecords[0];
-      passwordsMatch = await argon2.verify(userRecord.cryptedPassword, plainPassword);
+      passwordsMatch = await UserRecord.getHasher().verify(userRecord.cryptedPassword, plainPassword);
     }
 
     const user = (passwordsMatch && userRecord.userInstance) || null;
@@ -64,7 +79,7 @@ class UserRecord {
   }
 
   static async all() {
-    const userList = await MysqlReq.query({
+    const userList = await UserRecord.getRequestor().query({
       sql: 'SELECT * FROM User',
       after: res => res.map(row => (new UserRecord(row)).userInstance)
     });
@@ -97,7 +112,7 @@ class UserRecord {
   static async _getUserRecordsBy(params) {
     let sql = 'SELECT ID, username, email, cryptedPassword FROM User WHERE ?'
 
-    const userRecordList = await MysqlReq.query({
+    const userRecordList = await UserRecord.getRequestor().query({
       sql,
       values: params,
       after: res => res.map(row => new UserRecord(row))
