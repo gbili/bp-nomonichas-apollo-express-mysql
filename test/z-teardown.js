@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { MysqlReq } from 'mysql-oh-wait';
+import DiContainer from '../src/DiContainer';
 
 let poststrapped = false;
 describe('Global teardown', function() {
@@ -7,7 +7,8 @@ describe('Global teardown', function() {
   before(async () => { 
     poststrapped = true;
     try {
-      await MysqlReq.disconnect();
+      (await DiContainer.get('MysqlReqTestForDump')).disconnect();
+      (await DiContainer.get('MysqlReqTest')).disconnect();
     } catch (err) {
       console.log('Teardown Error:', err);
     }
