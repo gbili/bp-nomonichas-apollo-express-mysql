@@ -6,13 +6,13 @@ import chaiAsPromised from 'chai-as-promised';
 
 import mysql from 'mysql';
 import logger from 'saylo';
+import DiContainer from 'di-why';
 import { MysqlDump, MysqlInstantiatableReq } from 'mysql-oh-wait';
 import { readFileSync, existsSync } from 'fs';
 import argon2 from 'argon2';
 
 import schemaFilePath from '../src/data/schema';
 
-import DiContainer from '../src/DiContainer';
 import { UserRecord } from '../src/models/User';
 import { Book, User } from '../src/models';
 
@@ -22,8 +22,6 @@ const envVarNames = {
   password: 'TEST_DB_PASSWORD',
   database: 'TEST_DB_NAME',
 };
-
-DiContainer.inject({ logger });
 
 const injectionDict = {
   'MysqlReqTestForDump': {
@@ -80,7 +78,8 @@ describe('Global Bootstrapping', function() {
 
     chai.use(chaiAsPromised);
 
-    await DiContainer.cleanLoad(injectionDict);
+    const di = new DiContainer({ logger, load: injectionDict });
+    await di.loadAll();
   });
 
   it('bootstraps properly', function () {

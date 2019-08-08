@@ -5,8 +5,8 @@ import argon2 from 'argon2';
 import { MysqlReq } from 'mysql-oh-wait';
 import express from 'express';
 import cors from 'cors';
+import DiContainer from 'di-why';
 
-import DiContainer from '../DiContainer';
 import { UserRecord } from '../models/User';
 import { Book, User } from '../models';
 import { ApolloServer } from 'apollo-server-express';
@@ -62,7 +62,6 @@ const injectionDict = {
   },
 };
 
-DiContainer.inject({ logger });
-DiContainer.cleanLoad(injectionDict);
+new DiContainer({ logger, load: injectionDict });
 
 export default DiContainer;
