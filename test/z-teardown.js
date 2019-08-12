@@ -1,21 +1,18 @@
 import { expect } from 'chai';
-import DiContainer from 'di-why';
+import DiContainer from './bootstrap';
 
-let poststrapped = false;
 describe('Global teardown', function() {
 
-  before(async () => { 
-    poststrapped = true;
+  it('tears down properly', async function () {
+    const poststrapped = true;
     try {
-      const di = DiContainer.getLatestContainer();
-      (await di.get('MysqlReqTestForDump')).disconnect();
-      (await di.get('MysqlReqTest')).disconnect();
+      const dis = DiContainer.getContainers();
+      for (let di of dis) {
+        await di.emit('onTestsFinished', 'param');
+      }
     } catch (err) {
       console.log('Teardown Error:', err);
     }
-  });
-
-  it('tears down properly', function () {
     expect(poststrapped).to.be.equal(true);
   });
 

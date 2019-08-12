@@ -13,25 +13,49 @@ class Book extends RequestorCapability {
     if (book) {
       return book;
     }
-    let res = await Book.getRequestor().query({
+    const req = Book.getRequestor();
+
+    const actionResult = await req.query({
       sql: 'INSERT INTO Book (title, author) VALUES (?, ?)',
       values: [title, author]
     });
-    return new Book({ID: res.insertId, title, author});
+
+    if (actionResult.error) {
+      return null;
+    }
+
+    return new Book({ID: actionResult.value.insertId, title, author});
   }
 
   static async getBookByTitleAuthor({ title, author }) {
-    let res = await Book.getRequestor().query({
+    const req = Book.getRequestor();
+
+    const actionResult = await req.query({
       sql: 'SELECT * FROM Book WHERE title = ? AND author = ?',
       values: [ title, author ],
     });
+
+    if (actionResult.error) {
+      return null;
+    }
+
+    const res = actionResult.value;
+
     return (res && res.length && new Book(res[0])) || null;
   }
 
   static async all() {
-    return await Book.getRequestor().query({
+    const req = Book.getRequestor();
+
+    const actionResult = await req.query({
       sql: 'SELECT ID, title, author FROM Book'
     });
+
+    if (actionResult.error) {
+      return null;
+    }
+
+    return actionResult.value;
   }
 
 }

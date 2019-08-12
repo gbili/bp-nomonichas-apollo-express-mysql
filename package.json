@@ -8,7 +8,7 @@
     "prebuild": "npm run clean",
     "build": "babel -d ./build ./src",
     "coverage:generate": "nyc npm run test",
-    "coverage:check": "nyc check-coverage --lines 89 --branches 80 --statements 88 --functions 90",
+    "coverage:check": "nyc check-coverage --lines 80 --branches 70 --statements 80 --functions 80",
     "coverage:report": "nyc report --reporter=text-lcov > coverage.lcov",
     "coverage:report:upload": "CODECOV_TOKEN=\"$(grep \"CODECOV_TOKEN=\" .env | cut -d'=' -f2)\" codecov",
     "coverage": "npm run coverage:generate && npm run coverage:check && npm run coverage:report && npm run coverage:report:upload",
@@ -62,14 +62,15 @@
     "apollo-server-express": "^2.6.2",
     "argon2": "^0.24.0",
     "bcrypt": "^3.0.6",
-    "di-why": "0.0.2",
+    "di-why": "^0.9.4",
     "dotenv": "^8.0.0",
     "express": "^4.17.1",
     "graphql": "^14.4.2",
     "graphql-import": "^0.7.1",
+    "jws": "^3.2.2",
     "mysql": "^2.17.1",
-    "mysql-oh-wait": "^0.5.0",
-    "saylo": "^0.1.3"
+    "mysql-oh-wait": "^0.6.1",
+    "saylo": "^0.2.3"
   },
   "directories": {
     "test": "test"

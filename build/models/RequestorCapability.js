@@ -1,7 +1,15 @@
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
 let _requestor = null;
 
-export default class RequestorCapability {
-  static inject({ requestor }) {
+class RequestorCapability {
+  static inject({
+    requestor
+  }) {
     requestor && RequestorCapability.setRequestor(requestor);
   }
 
@@ -13,6 +21,10 @@ export default class RequestorCapability {
     if (!_requestor) {
       throw new Error('Must set requestor first');
     }
+
     return _requestor;
   }
+
 }
+
+exports.default = RequestorCapability;

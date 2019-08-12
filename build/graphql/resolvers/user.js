@@ -8,7 +8,7 @@ const resolver = {
   Query: {
     getLoggedInUser: async (_, __, {
       loggedInUser,
-      User
+      AuthService
     }) => {
       return loggedInUser;
     }
@@ -17,10 +17,10 @@ const resolver = {
     registerUser: async (_, {
       input
     }, {
-      User
+      AuthService
     }) => {
       try {
-        const user = await User.register(input);
+        const user = await AuthService.register(input);
         return user;
       } catch (err) {
         console.log('error', err);

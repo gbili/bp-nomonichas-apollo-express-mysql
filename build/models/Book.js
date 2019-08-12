@@ -5,14 +5,17 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
-var _mysqlOhWait = require("mysql-oh-wait");
+var _RequestorCapability = _interopRequireDefault(require("./RequestorCapability"));
 
-class Book {
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+class Book extends _RequestorCapability.default {
   constructor({
     ID,
     title,
     author
   }) {
+    super();
     this.ID = ID;
     this.title = title;
     this.author = author;
@@ -31,12 +34,18 @@ class Book {
       return book;
     }
 
-    let res = await _mysqlOhWait.MysqlReq.query({
+    const req = Book.getRequestor();
+    const actionResult = await req.query({
       sql: 'INSERT INTO Book (title, author) VALUES (?, ?)',
       values: [title, author]
     });
+
+    if (actionResult.error) {
+      return null;
+    }
+
     return new Book({
-      ID: res.insertId,
+      ID: actionResult.value.insertId,
       title,
       author
     });
@@ -46,17 +55,31 @@ class Book {
     title,
     author
   }) {
-    let res = await _mysqlOhWait.MysqlReq.query({
+    const req = Book.getRequestor();
+    const actionResult = await req.query({
       sql: 'SELECT * FROM Book WHERE title = ? AND author = ?',
       values: [title, author]
     });
+
+    if (actionResult.error) {
+      return null;
+    }
+
+    const res = actionResult.value;
     return res && res.length && new Book(res[0]) || null;
   }
 
   static async all() {
-    return await _mysqlOhWait.MysqlReq.query({
+    const req = Book.getRequestor();
+    const actionResult = await req.query({
       sql: 'SELECT ID, title, author FROM Book'
     });
+
+    if (actionResult.error) {
+      return null;
+    }
+
+    return actionResult.value;
   }
 
 }

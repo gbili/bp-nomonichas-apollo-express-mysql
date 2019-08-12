@@ -1,14 +1,14 @@
 const resolver = {
   Query: {
-    getLoggedInUser: async (_, __, { loggedInUser, User }) => {
+    getLoggedInUser: async (_, __, { loggedInUser, AuthService }) => {
       return loggedInUser;
     },
   },
 
   Mutation: {
-    registerUser: async (_, { input }, { User }) => {
+    registerUser: async (_, { input }, { AuthService }) => {
       try {
-        const user = await User.register(input);
+        const user = await AuthService.register(input);
         return user;
       } catch (err) {
         console.log('error', err);
