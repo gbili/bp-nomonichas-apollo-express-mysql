@@ -62,7 +62,7 @@
     "apollo-server-express": "^2.6.2",
     "argon2": "^0.24.0",
     "bcrypt": "^3.0.6",
-    "di-why": "^0.9.4",
+    "di-why": "^0.10.0",
     "dotenv": "^8.0.0",
     "express": "^4.17.1",
     "graphql": "^14.4.2",

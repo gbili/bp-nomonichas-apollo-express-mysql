@@ -12,7 +12,7 @@ import { readFileSync, existsSync } from 'fs';
 import argon2 from 'argon2';
 
 import schemaFilePath from '../src/data/schema';
-import tokenConfig from '../src/config/tokenConfig';
+import tokenConfigGenerator from '../src/config/tokenConfigGenerator';
 
 import { Book, PasswordUserModel, TokenUser } from '../src/models';
 import AuthService from '../src/services/AuthService';
@@ -164,7 +164,7 @@ const prepareDi = function({ eventsLogger, diLogger, mysqlDumpLogger, mysqlReqFo
         models: {
           TokenUser
         },
-        tokenConfig,
+        tokenConfig: tokenConfigGenerator({ expireTokensEveryNHours: 1 }),
         hasher: argon2,
         events
       },

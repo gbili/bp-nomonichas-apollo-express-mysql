@@ -2,11 +2,22 @@ type User {
   ID: ID!
   username: String!
   email: String!
-  books: [Book]!
+}
+
+type TokenUser {
+  ID: ID!
+  token: String!
+  username: String
+  email: String
+}
+
+type RegistrationStatus {
+  message: String!
+  status: String!
 }
 
 extend type Query {
-  getLoggedInUser: User
+  getLoggedInUser: TokenUser
 }
 
 input RegisterUserInput {
@@ -17,17 +28,17 @@ input RegisterUserInput {
 
 input LoginUserWithEmailInput {
   email: String!
-  password: String!
+  plainPassword: String!
 }
 
 input LoginUserWithUsernameInput {
   username: String!
-  password: String!
+  plainPassword: String!
 }
 
 extend type Mutation {
-  registerUser(input: RegisterUserInput!): User!
-  loginUserWithEmail(input: LoginUserWithEmailInput!): User
-  loginUserWithUsername(input: LoginUserWithUsernameInput!): User
+  registerUser(input: RegisterUserInput!): RegistrationStatus
+  loginUserWithEmail(input: LoginUserWithEmailInput!): TokenUser
+  loginUserWithUsername(input: LoginUserWithUsernameInput!): TokenUser
 }
 

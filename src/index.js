@@ -1,16 +1,20 @@
-import DiContainer from './loaders';
+import di from './loaders';
 
 (async function () {
   try {
-    const di = DiContainer.getLatestContainer();
+
     await di.loadAll();
-    const App = await di.get('App');
+
+    const app = await di.get('app');
     const logger = await di.get('logger');
-    const appConfig = await di.get('appConfig');
-    logger.log(' ///////////////////////////////////////////////////////////');
-    logger.log(' //////////////////// App going to start ///////////////////');
-    logger.log(' ///////////////////////////////////////////////////////////');
-    App.start(appConfig);
+    const { path, port } = await di.get('appConfig');
+
+    app.listen({ port }, () => {
+      logger.log(' ///////////////////////////////////////////////////////////');
+      logger.log(` ////////////// App: localhost:${port}/${path} /////////////`);
+      logger.log(' ///////////////////////////////////////////////////////////');
+    });
+
   } catch (err) {
     logger.log('Error while starting the application :', err);
   }
