@@ -1,6 +1,6 @@
 import 'dotenv/config';
 import mysql from 'mysql';
-import logger from 'saylo';
+import { Logger, logger } from 'saylo';
 import { MysqlInstantiatableReq } from 'mysql-oh-wait';
 import express from 'express';
 import DiContainer from 'di-why';
@@ -16,6 +16,8 @@ import templateStatusMessages from '../config/templateStatusMessages';
 import tokenConfigGenerator from '../config/tokenConfigGenerator';
 import grapqlSchema from '../graphql/schema';
 import resolvers from '../graphql/resolvers';
+
+const muteLogger = new Logger({log: false, debug: false});
 
 const injectionDict = {
 
@@ -62,7 +64,7 @@ const injectionDict = {
   'MysqlReq': {
     constructible: MysqlInstantiatableReq,
     deps: {
-      logger,
+      logger: muteLogger,
       adapter: mysql,
       connectionConfig: {
         multipleStatements: false,
@@ -121,7 +123,8 @@ const injectionDict = {
 
   'app': {
     instance: express(),
-    after: ({ me, serviceLocator }) => {
+    async after({ me, serviceLocator }) {
+      const logger = await serviceLocator.get('logger');
       logger.log('=============== Loaded express app ===============');
       logger.log(me);
     },
@@ -148,6 +151,6 @@ const injectionDict = {
 
 };
 
-const di = new DiContainer({ logger, load: injectionDict });
+const di = new DiContainer({ logger: muteLogger, load: injectionDict });
 
 export default di;
