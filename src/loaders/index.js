@@ -35,7 +35,7 @@ const injectionDict = {
   'events': {
     instance: {
       emit(...params) {
-        logger.log(params);
+        muteLogger.log(params);
       },
     },
   },
@@ -64,7 +64,7 @@ const injectionDict = {
   'MysqlReq': {
     constructible: MysqlInstantiatableReq,
     deps: {
-      logger: muteLogger,
+      logger,
       adapter: mysql,
       connectionConfig: {
         multipleStatements: false,
