@@ -1,10 +1,8 @@
 import { PasswordUserModel } from '../models';
 
 export default {
-  'PasswordUserModel': {
-    injectable: PasswordUserModel,
-    locateDeps: {
-      requestor: 'MysqlReq',
-    },
+  injectable: PasswordUserModel,
+  locateDeps: {
+    requestor: 'mysqlReq',
   },
 };

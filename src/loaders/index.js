@@ -2,14 +2,14 @@ import 'dotenv/config';
 import { Logger, logger } from 'saylo';
 import DiContainer from 'di-why';
 
-import pum from './PasswordUserModel';
-import apols from './apolloServer';
-import apolc from './apolloContext';
-import auths from './authService';
-import mysqlr from './mysqlReq';
-import book from './Book';
+import PasswordUserModel from './PasswordUserModel';
+import apolloServer from './apolloServer';
+import apolloContext from './apolloContext';
+import authService from './authService';
+import mysqlReq from './mysqlReq';
+import Book from './Book';
 import app from './app';
-import appco from './appConfig';
+import appConfig from './appConfig';
 
 const muteLogger = new Logger({log: false, debug: false});
 
@@ -27,14 +27,14 @@ const injectionDict = {
     },
   },
 
-  ...pum,
-  ...apols,
-  ...apolc,
-  ...auths,
-  ...mysqlr,
-  ...book,
-  ...app,
-  ...appco,
+  PasswordUserModel,
+  apolloServer,
+  apolloContext,
+  authService,
+  mysqlReq,
+  Book,
+  app,
+  appConfig,
 
 };
 
