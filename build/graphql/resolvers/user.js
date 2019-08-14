@@ -6,26 +6,79 @@ Object.defineProperty(exports, "__esModule", {
 exports.default = void 0;
 const resolver = {
   Query: {
+    // TODO remove this, it was just to verify that middleware was passing token and authService properly, and it works
     getLoggedInUser: async (_, __, {
-      loggedInUser,
-      AuthService
+      authService,
+      token
     }) => {
-      return loggedInUser;
+      let tokenUser = null;
+
+      try {
+        tokenUser = await authService.authenticate({
+          token
+        });
+      } catch (err) {
+        throw err;
+      }
+
+      return tokenUser;
     }
   },
   Mutation: {
     registerUser: async (_, {
       input
     }, {
-      AuthService
+      authService,
+      templateStatusMessages
     }) => {
+      let user = null;
+
       try {
-        const user = await AuthService.register(input);
-        return user;
+        user = await authService.register(input);
       } catch (err) {
-        console.log('error', err);
         throw err;
       }
+
+      const status = user && 'SUCCESS' || 'FAIL';
+      const message = templateStatusMessages['USER_REGISTER'][status];
+      return {
+        status,
+        message
+      };
+    },
+    loginUserWithEmail: async (_, {
+      input
+    }, {
+      authService
+    }) => {
+      let tokenUser = null;
+
+      try {
+        tokenUser = await authService.authenticate({
+          loginInput: input
+        });
+      } catch (err) {
+        throw err;
+      }
+
+      return tokenUser;
+    },
+    loginUserWithUsername: async (_, {
+      input
+    }, {
+      authService
+    }) => {
+      let tokenUser = null;
+
+      try {
+        tokenUser = await authService.authenticate({
+          loginInput: input
+        });
+      } catch (err) {
+        throw err;
+      }
+
+      return tokenUser;
     }
   }
 };

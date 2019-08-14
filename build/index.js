@@ -6,16 +6,20 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 (async function () {
   try {
-    const di = _loaders.default.getLatestContainer();
-
-    await di.loadAll();
-    const App = await di.get('App');
-    const logger = await di.get('logger');
-    const appConfig = await di.get('appConfig');
-    logger.log(' ///////////////////////////////////////////////////////////');
-    logger.log(' //////////////////// App going to start ///////////////////');
-    logger.log(' ///////////////////////////////////////////////////////////');
-    App.start(appConfig);
+    await _loaders.default.loadAll();
+    const app = await _loaders.default.get('app');
+    const logger = await _loaders.default.get('logger');
+    const {
+      path,
+      port
+    } = await _loaders.default.get('appConfig');
+    app.listen({
+      port
+    }, () => {
+      logger.log(' ///////////////////////////////////////////////////////////');
+      logger.log(` ////////////// App: localhost:${port}/${path} /////////////`);
+      logger.log(' ///////////////////////////////////////////////////////////');
+    });
   } catch (err) {
     logger.log('Error while starting the application :', err);
   }

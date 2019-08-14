@@ -7,132 +7,57 @@ exports.default = void 0;
 
 require("dotenv/config");
 
-var _mysql = _interopRequireDefault(require("mysql"));
-
-var _saylo = _interopRequireDefault(require("saylo"));
-
-var _mysqlOhWait = require("mysql-oh-wait");
-
-var _express = _interopRequireDefault(require("express"));
+var _saylo = require("saylo");
 
 var _diWhy = _interopRequireDefault(require("di-why"));
 
-var _argon = _interopRequireDefault(require("argon2"));
+var _PasswordUserModel = _interopRequireDefault(require("./PasswordUserModel"));
 
-var _apolloServerExpress = require("apollo-server-express");
+var _apolloServer = _interopRequireDefault(require("./apolloServer"));
 
-var _models = require("../models");
+var _apolloContext = _interopRequireDefault(require("./apolloContext"));
 
-var _Server = _interopRequireDefault(require("../Server"));
+var _authService = _interopRequireDefault(require("./authService"));
 
-var _App = _interopRequireDefault(require("../App"));
+var _mysqlReq = _interopRequireDefault(require("./mysqlReq"));
 
-var _AuthService = _interopRequireDefault(require("../services/AuthService"));
+var _Book = _interopRequireDefault(require("./Book"));
 
-var _appConfig = _interopRequireDefault(require("../config/appConfig"));
+var _app = _interopRequireDefault(require("./app"));
 
-var _tokenConfig = _interopRequireDefault(require("../config/tokenConfig"));
-
-var _schema = _interopRequireDefault(require("../graphql/schema"));
-
-var _resolvers = _interopRequireDefault(require("../graphql/resolvers"));
+var _appConfig = _interopRequireDefault(require("./appConfig"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-const events = {
-  emit(...params) {
-    _saylo.default.log(params);
-  }
-
-};
+const muteLogger = new _saylo.Logger({
+  log: false,
+  debug: false
+});
 const injectionDict = {
   'logger': {
-    instance: _saylo.default
+    instance: _saylo.logger
   },
-  'PasswordUserModel': {
-    injectable: _models.PasswordUserModel,
-    locateDeps: {
-      requestor: 'MysqlReq'
-    }
-  },
-  'AuthService': {
-    constructible: _AuthService.default,
-    deps: {
-      models: {
-        TokenUser: _models.TokenUser
-      },
-      tokenConfig: _tokenConfig.default,
-      hasher: _argon.default,
-      events
-    },
-    locateDeps: {
-      models: {
-        PasswordUserModel: 'PasswordUserModel'
+  'events': {
+    // TODO create a di factory entry which calls the factory function with deps as params
+    instance: {
+      emit(...params) {
+        muteLogger.log(params);
       }
-    }
-  },
-  'appConfig': {
-    instance: _appConfig.default
-  },
-  'MysqlReq': {
-    constructible: _mysqlOhWait.MysqlInstantiatableReq,
-    deps: {
-      logger: _saylo.default,
-      adapter: _mysql.default,
-      connectionConfig: {
-        multipleStatements: false,
-        ..._mysqlOhWait.MysqlInstantiatableReq.extractConfigFromEnv(process.env)
-      }
-    },
-    // TODO consider factories
-    after: ({
-      me
-    }) => me.connect()
-  },
-  'Book': {
-    injectable: _models.Book,
-    locateDeps: {
-      requestor: 'MysqlReq'
-    }
-  },
-  'App': {
-    injectable: _App.default,
-    deps: {
-      appProvider: _express.default,
-      logger: _saylo.default
-    }
-  },
-  'Server': {
-    constructible: _apolloServerExpress.ApolloServer,
-    deps: {
-      typeDefs: _schema.default,
-      resolvers: _resolvers.default
-    },
-    locateDeps: {
-      context: {
-        Book: 'Book',
-        AuthService: 'AuthService'
-      }
-    },
-    after: async ({
-      me,
-      serviceLocator
-    }) => {
-      const app = (await serviceLocator.get('App')).getInstance();
-      const path = (await serviceLocator.get('appConfig')).path; // use the express application as middleware in apollo server
 
-      _saylo.default.log('Going to applyMiddleware');
-
-      me.applyMiddleware({
-        app,
-        path
-      });
     }
-  }
+  },
+  PasswordUserModel: _PasswordUserModel.default,
+  apolloServer: _apolloServer.default,
+  apolloContext: _apolloContext.default,
+  authService: _authService.default,
+  mysqlReq: _mysqlReq.default,
+  Book: _Book.default,
+  app: _app.default,
+  appConfig: _appConfig.default
 };
-new _diWhy.default({
-  logger: _saylo.default,
+const di = new _diWhy.default({
+  logger: muteLogger,
   load: injectionDict
 });
-var _default = _diWhy.default;
+var _default = di;
 exports.default = _default;

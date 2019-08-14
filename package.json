@@ -1,5 +1,5 @@
 {
-  "name": "bp-nomonichas-apollo-express-mysql",
+  "name": "bp-nomonychas-reama",
   "version": "0.0.0-development",
   "description": "Base Project: Node Mocha Chai Travis Semantic-Release Nyc Codecov Ghooks, Apollo, Express & MySQL",
   "main": "build/index.js",
@@ -25,7 +25,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/gbili/bp-nomonichas-apollo-express-mysql.git"
+    "url": "https://github.com/gbili/bp-nomonychas-reama.git"
   },
   "keywords": [
     "nodejs",
@@ -37,9 +37,9 @@
   "author": "Guillermo Pages <mail@guillermo.at> (https://guillermo.at)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/gbili/bp-nomonichas-apollo-express-mysql/issues"
+    "url": "https://github.com/gbili/bp-nomonychas-reama/issues"
   },
-  "homepage": "https://github.com/gbili/bp-nomonichas-apollo-express-mysql#readme",
+  "homepage": "https://github.com/gbili/bp-nomonychas-reama#readme",
   "devDependencies": {
     "@babel/cli": "7.4.4",
     "@babel/core": "7.4.5",

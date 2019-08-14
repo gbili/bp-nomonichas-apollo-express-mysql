@@ -16,7 +16,19 @@ class UserAsPropsCapability {
     username,
     email
   }) {
-    if (!user) {
+    if (!(user instanceof _User.default)) {
+      if (!ID) {
+        throw new Error('UserAsPropsCapability must receive either a User instance or an an ID on construction');
+      }
+
+      if (!username) {
+        username = null;
+      }
+
+      if (!email) {
+        email = null;
+      }
+
       user = new _User.default({
         ID,
         username,

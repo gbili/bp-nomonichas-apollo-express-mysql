@@ -35,17 +35,17 @@ class AuthService {
         email,
         cryptedPassword
       });
-
-      if (!passwordUser) {
-        this.events.emit('AuthService:register:fail', {
-          username,
-          email,
-          message: "Try logging in if you are a member"
-        });
-        return null;
-      }
     } catch (err) {
       this.events.emit('AuthService:register:error', err);
+    }
+
+    if (!passwordUser) {
+      this.events.emit('AuthService:register:fail', {
+        username,
+        email,
+        message: "Try logging in if you are a member"
+      });
+      return null;
     }
 
     const user = passwordUser.userInstance;
@@ -89,20 +89,36 @@ class AuthService {
     const {
       TokenUser
     } = this.models;
-    const payload = this.verifyToken({
+    const jsonPayload = this.verifyToken({
       token
     });
 
-    if (!payload) {
+    if (!jsonPayload) {
       this.events.emit('AuthService:authenticateTokenStrategy:fail', token);
       throw new Error('AuthService:authenticateTokenStrategy() authentication fail', token);
     }
 
-    const userInfo = {
-      ID: payload.aud
-    };
+    const payload = JSON.parse(jsonPayload);
+
+    if (!payload.exp || !payload.aud) {
+      this.events.emit('AuthService:authenticateTokenStrategy:fail token was malformed by server', token);
+      throw new Error('AuthService:authenticateTokenStrategy() authentication fail', token);
+    }
+
+    const {
+      exp: expirationTime,
+      aud: ID
+    } = payload;
+
+    if (expirationTime <= this.tokenConfig.now()) {
+      this.events.emit('AuthService:authenticateTokenStrategy:fail expired token', token);
+      throw new Error('AuthService:authenticateTokenStrategy() authentication fail, please login again', token);
+    }
+
     const tokenUser = new TokenUser({
-      userInfo,
+      userInfo: {
+        ID
+      },
       token
     });
     this.events.emit('AuthService:authenticateTokenStrategy:success', tokenUser);
@@ -203,7 +219,7 @@ class AuthService {
       },
       payload: {
         aud: user.ID,
-        exp: expiresIn
+        exp: expiresIn()
       },
       secret
     };
@@ -223,9 +239,17 @@ class AuthService {
     } = this.tokenConfig;
     let secret = null;
 
+    if (!keys.privateKey) {
+      throw new Error('AuthService:verifyToken() bad configuration, need at least a keys.privateKey', algorithm);
+    }
+
     if (algorithm.charAt(0) === 'H') {
       secret = keys.privateKey;
     } else if (algorithm.charAt(0) === 'R') {
+      if (!keys.publicKey) {
+        throw new Error('AuthService:verifyToken() bad configuration, need a keys.publicKey with RSA algorithm', algorithm);
+      }
+
       secret = keys.publicKey;
     } else {
       throw new Error('AuthService:verifyToken() unsupported encryption algorithm', algorithm);

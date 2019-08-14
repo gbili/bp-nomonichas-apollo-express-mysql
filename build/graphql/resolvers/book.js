@@ -7,8 +7,19 @@ exports.default = void 0;
 const resolver = {
   Query: {
     books: async (_, __, {
-      Book
+      authService,
+      token,
+      models
     }) => {
+      if (!(await authService.authenticate({
+        token
+      }))) {
+        throw new Error('Authentication required for this operation');
+      }
+
+      const {
+        Book
+      } = models;
       return await Book.all();
     }
   },
@@ -18,8 +29,19 @@ const resolver = {
     addBook: async (parent, {
       input
     }, {
-      Book
+      authService,
+      token,
+      models
     }) => {
+      if (!(await authService.authenticate({
+        token
+      }))) {
+        throw new Error('Authentication required for this operation');
+      }
+
+      const {
+        Book
+      } = models;
       return await Book.create(input);
     }
   }
