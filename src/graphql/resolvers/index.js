@@ -1,8 +1,8 @@
-import book from './book.js';
+import file from './file.js';
 import user from './user.js';
 
 const resolvers = [
-  book,
+  file,
   user,
 ];
 export default resolvers;

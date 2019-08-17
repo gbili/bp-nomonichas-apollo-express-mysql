@@ -4,9 +4,9 @@ import { di, bootstrap } from '../bootstrap';
 import PasswordUser from '../../src/models/PasswordUser';
 import User from '../../src/models/User';
 
-describe('#+#+#+#+#+#+#+# PasswordUser', function() {
+describe('PasswordUser', function() {
 
-  describe(`# # # # # # # # PasswordUser.constructor({ID, username, email})`, function() {
+  describe(`PasswordUser.constructor({ID, username, email})`, function() {
 
     let user = null;
 

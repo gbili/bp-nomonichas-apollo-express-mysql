@@ -1,0 +1,40 @@
+# files will have a dl url even before they are uploaded
+# the client should make sure to up before download
+type File {
+  ID: ID!
+  filename: String!
+  dateCreated: Date!
+  dlUrlValidUntil: Date!
+  dlUrl: String!
+}
+
+type UploadableFile {
+  ID: ID!
+  filename: String!
+  dateCreated: Date!
+  dlUrlValidUntil: Date!
+  dlUrl: String!
+
+  ulUrlValidUntil: Date!
+  ulUrl: String!
+}
+
+# user id inferred from token
+input FilesInput {
+  list: [ID]!
+}
+
+# user id inferred from token
+extend type Query {
+  files: [File]!
+}
+
+# user id inferred from token
+input GenerateUploadableFileInput {
+  filename: String!
+  contentType: String!
+}
+# user id inferred from token
+extend type Mutation {
+  generateUploadableFile(input: GenerateUploadableFileInput): UploadableFile!
+}

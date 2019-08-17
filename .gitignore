@@ -72,6 +72,10 @@ typings/
 .env
 .env.test
 
+# .pem files
+pk*.pem
+rsa*.pem
+
 # parcel-bundler cache (https://parceljs.org/)
 .cache
 

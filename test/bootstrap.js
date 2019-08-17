@@ -14,7 +14,8 @@ import argon2 from 'argon2';
 import schemaFilePath from '../src/data/schema';
 import tokenConfigGenerator from '../src/config/tokenConfigGenerator';
 
-import { Book, PasswordUserModel, TokenUser } from '../src/models';
+import { File, FileModel, PasswordUserModel, TokenUser } from '../src/models';
+
 import AuthService from '../src/services/AuthService';
 
 const prepareDi = function({ eventsLogger, diLogger, mysqlDumpLogger, mysqlReqForDumpLogger, mysqlReqLogger }) {
@@ -37,6 +38,28 @@ const prepareDi = function({ eventsLogger, diLogger, mysqlDumpLogger, mysqlReqFo
       instance: mysql,
       async onTestsFinished({serviceLocator, params}) {
       },
+    },
+    'fake-files-with-id': {
+      instance: [
+        {
+          ID: 1,
+          creatorID: 3,
+          pathToObject: 'the-object-is/stored-132-.jpg',
+          s3BucketName: 'stackive-files',
+          dateCreated: new Date(),
+          userProvidedFilename: 'this-is_my2019-name.jpg',
+          uploadStatus: true,
+        },
+        {
+          ID: 9,
+          creatorID: 4,
+          pathToObject: 'the-object-isstored-132-.jpg',
+          s3BucketName: 'files-stackive',
+          dateCreated: new Date(),
+          userProvidedFilename: 'this-ismy2019name.jpg',
+          uploadStatus: false,
+        },
+      ],
     },
     'fake-users-with-id': {
       instance: [
@@ -147,13 +170,14 @@ const prepareDi = function({ eventsLogger, diLogger, mysqlDumpLogger, mysqlReqFo
       },
     },
 
-    'emptyEmptyStorageTables': {
+    'emptyStorageTables': {
       instance: async function({serviceLocator}) {
         try {
           const me = await serviceLocator.get('MysqlDump');
           await me.executeSqlFileOnExistingConnection({ filePath: schemaFilePath, disconnectOnFinish: false, });
         } catch (err) {
           console.log('Building database tables error:', err);
+          throw err;
         }
       },
     },
@@ -175,14 +199,16 @@ const prepareDi = function({ eventsLogger, diLogger, mysqlDumpLogger, mysqlReqFo
       },
     },
 
-    'Book': {
-      injectable: Book,
-      locateDeps: { requestor: 'MysqlReqTest' },
-    },
-
     'PasswordUserModel': {
       injectable: PasswordUserModel,
       locateDeps: { requestor: 'MysqlReqTest' },
+    },
+
+    'FileModel': {
+      injectable: FileModel,
+      locateDeps: {
+        requestor: 'MysqlReqTest',
+      }
     },
   };
 
@@ -193,10 +219,11 @@ const prepareDi = function({ eventsLogger, diLogger, mysqlDumpLogger, mysqlReqFo
 chai.use(chaiAsPromised);
 
 const muteLogger = new Logger({log: false, debug: false});
+const fullLogger = new Logger({log: true, debug: true});
 const di = prepareDi({
   eventsLogger: muteLogger,
-  diLogger: muteLogger,
-  mysqlDumpLogger: muteLogger,
+  diLogger: fullLogger,
+  mysqlDumpLogger: fullLogger,
   mysqlReqForDumpLogger: muteLogger,
   mysqlReqLogger: muteLogger
 });
@@ -205,8 +232,8 @@ const tablesBootstraper = function(di) {
   return async function (where) {
     where = where || 'nowhere';
     await di.loadAll();
-    const emptyEmptyStorageTables = await di.get('emptyEmptyStorageTables');
-    await emptyEmptyStorageTables({ serviceLocator: di });
+    const emptyStorageTables = await di.get('emptyStorageTables');
+    await emptyStorageTables({ serviceLocator: di });
     return true;
   };
 };

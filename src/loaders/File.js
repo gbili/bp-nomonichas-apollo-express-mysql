@@ -1,7 +1,7 @@
-import { Book } from '../models';
+import { File } from '../models';
 
 export default {
-  injectable: Book,
+  injectable: File,
   locateDeps: { requestor: 'mysqlReq' },
 };
 

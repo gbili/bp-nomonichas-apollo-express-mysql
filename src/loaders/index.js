@@ -1,43 +1,47 @@
 import 'dotenv/config';
-import { Logger, logger } from 'saylo';
+import { Logger } from 'saylo';
 import DiContainer from 'di-why';
 
+import logger from './logger';
+import events from './events';
 import PasswordUserModel from './PasswordUserModel';
 import apolloServer from './apolloServer';
 import apolloContext from './apolloContext';
 import authService from './authService';
 import mysqlReq from './mysqlReq';
-import Book from './Book';
-import app from './app';
 import appConfig from './appConfig';
-
-const muteLogger = new Logger({log: false, debug: false});
+import app from './app';
+import s3Config from './s3Config';
+import s3Wrapper from './s3Wrapper';
+import cloudFrontSignConfig from './cloudFrontSignConfig';
+import cloudFrontSignWrapper from './cloudFrontSignWrapper';
+import urlSignService from './urlSignService';
+import FileModel from './FileModel';
+import fileService from './fileService';
+import mimeTypesConfig from './mimeTypesConfig';
+import getExpirationTime from './getExpirationTime';
 
 const injectionDict = {
-
-  'logger': {
-    instance: logger,
-  },
-  'events': {
-    // TODO create a di factory entry which calls the factory function with deps as params
-    instance: {
-      emit(...params) {
-        muteLogger.log(params);
-      },
-    },
-  },
-
+  logger,
+  events,
   PasswordUserModel,
   apolloServer,
   apolloContext,
   authService,
   mysqlReq,
-  Book,
-  app,
   appConfig,
-
+  app,
+  s3Config,
+  s3Wrapper,
+  cloudFrontSignConfig,
+  cloudFrontSignWrapper,
+  urlSignService,
+  FileModel,
+  fileService,
+  mimeTypesConfig,
+  getExpirationTime,
 };
 
-const di = new DiContainer({ logger: muteLogger, load: injectionDict });
+const di = new DiContainer({ logger: new Logger({log: false, debug: false}), load: injectionDict });
 
 export default di;
